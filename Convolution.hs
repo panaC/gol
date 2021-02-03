@@ -1,20 +1,7 @@
 module Convolution (convolve2d, convolveDebug) where
 
 import Data.List.Split
-import qualified Debug.Trace as Trace
-
-import Data.List
-
-print_ x =  putStr $ (show x) ++ "\t" 
-
-table xxs 
-    | length (nub [length xs | xs <- xxs])/=1 = error "not simetric"
-        | otherwise = mapM_ printRow xxs 
-                where printRow xs =  (mapM_ print_) xs >> putStrLn "" 
-
-
-trace' :: Show a => [Char] -> a -> a
-trace' name x = Trace.trace (name ++ ": " ++ show x) x
+import Debug
 
 type Rect = [[Int]]
 
@@ -40,15 +27,17 @@ paddingMatrix r psize = ptop ++ pside ++ ptop
 -- sum each new square
 
 -- convolve input -> kernel -> output
-convolve2d :: [[Rect]] -> Rect -> Rect
-convolve2d m k = [[ s (zip' mtx k)  | mtx <- row] | row  <- m]
+convolve2d :: Rect -> Rect -> Rect
+convolve2d m k = [[ s (zip' mtx k)  | mtx <- row] | row  <- subm ]
         where
             s mtx = sum $ [ sum ([a*b | (a,b) <- row ] ) | row <- mtx ]
             zip' mtx ker = zipWith zip mtx ker
+            padm = paddingMatrix m $ length k `div` 2
+            subm = subMatrix padm $ length k
 
 
 convolveDebug = do
-  let sq = splitEvery 4 [
+  let sq = splitEvery 4 [1..4*4]
 
   -- print res
 
@@ -68,6 +57,6 @@ convolveDebug = do
   let size = (length res2, length (res2 !! 0))
   print size
 
-  let conv = convolve2d res2 [[1,1,1],[1,0,1],[1,1,1]]
+  let conv = convolve2d sq [[1,1,1],[1,0,1],[1,1,1]]
   
   print conv
