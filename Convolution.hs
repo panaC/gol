@@ -7,7 +7,7 @@ type Rect = [[Int]]
 
 -- find all sub n square in a big rect
 subMatrix :: Rect -> Int -> [[Rect]]
-subMatrix r size = splitEvery ((length r ) - size + 1) [row x y | x<-range, y<-range]
+subMatrix r size = chunksOf ((length r ) - size + 1) [row x y | x<-range, y<-range]
         where
            range = [0..(length r - size)]
            row x y = take size $ drop y $ col x y
@@ -37,7 +37,7 @@ convolve2d m k = [[ s (zip' mtx k)  | mtx <- row] | row  <- subm ]
 
 
 convolveDebug = do
-  let sq = splitEvery 4 [1..4*4]
+  let sq = chunksOf 4 [1..4*4]
 
   -- print res
 
