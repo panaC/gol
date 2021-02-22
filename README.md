@@ -1,4 +1,8 @@
 
+[WIP] haskell playground
+
+
+
 Can't load any window lib
 
 I tried X11 -> GTK -> SDL2 
